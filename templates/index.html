@@ -34,7 +34,11 @@
                 <td>{{ result.flower_name }}</td>
                 <td>{{ result.lat_num }}, {{ result.long_num }}</td>
                 <td>{{ result.place }}</td>
-                <td><a href="{{ url_for('edit', flower_id=result.id) }}" class="btn btn-info">Edit</a></td>
+                <td>
+                    <a href="{{ url_for('edit', flower_id=result.id) }}" class="btn btn-info">Edit</a>
+                    &nbsp;
+                    <a href="{{ url_for('delete', flower_id=result.id) }}" class="btn btn-danger">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -107,7 +107,56 @@ def update(flower_id):
         place = request.form['place']
         detail = request.form['detail']
         print(flower_name, lat_num, long_num, place, detail)
-    return redirect("/")
+
+        # Conect database
+        my_db = mysql.connector.connect(
+            host = db_host,
+            user = db_user,
+            password = db_pass,
+            db = db_name
+        )
+        my_cursor = my_db.cursor(dictionary=True)
+        sql = """
+            UPDATE flowers
+            SET flower_name = %s,
+            lat_num = %s,
+            long_num = %s,
+            place = %s,
+            detail = %s
+            WHERE id = %s
+        """ 
+        val = (flower_name, lat_num, long_num, place, detail, flower_id)
+        my_cursor.execute(sql, val)
+        my_db.commit()
+
+
+        session['alert_status'] = "success"
+        session['alert_message'] = "Already Created!"
+        return redirect('/')
+    else :
+        session['alert_status'] = "fail"
+        session['alert_message'] = "Something went wrong!"
+        return redirect('/')
+    
+
+@app.route("/delete/<flower_id>", methods=['GET'])
+def delete(flower_id):
+    # Conect database
+    my_db = mysql.connector.connect(
+        host = db_host,
+        user = db_user,
+        password = db_pass,
+        db = db_name
+    )
+    my_cursor = my_db.cursor(dictionary=True)
+    sql = "DELETE FROM flowers WHERE id = %s"
+    val = (flower_id,)
+    my_cursor.execute(sql, val)
+    my_db.commit()
+
+    session['alert_status'] = "success"
+    session['alert_message'] = "Already Delete!"
+    return redirect('/')
 
 if __name__=="__main__":
     app.run(debug=True)
